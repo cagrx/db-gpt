@@ -7,9 +7,6 @@ By the end you'll be able to explain what Databricks is, how large language mode
 into it, and why companies want the combination — and you'll have built a small working
 thing that proves you've actually used both.
 
-> **Status: in progress.** Parts 1–3 and the project are finished and usable. Part 4 and
-> the reference pages are still being written — those two links don't resolve yet.
-
 ## Who this is for
 
 New CS graduates with light Python and SQL. You can write a loop and a `SELECT`.
