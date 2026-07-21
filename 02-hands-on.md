@@ -90,6 +90,9 @@ Unity Catalog objects from Part 1.5 — catalogs, schemas, tables, and volumes.
 
 - **The three-level naming** — `catalog.schema.table`. You met this in Part 1.5. Seeing
   it in the interface makes it concrete.
+- **Volumes**, alongside catalogs, schemas and tables. A **volume** holds *files* where a
+  table holds *rows* — it's how Unity Catalog stores documents, images, and anything else
+  that isn't tabular. You'll use one in 2.4 and properly in 2.6.
 - **Where the compute indicator is.** Something has to be running for a cell to execute.
   On Free Edition it's serverless, so you attach to it rather than configuring it.
 - **That a notebook mixes languages.** A SQL cell and a Python cell can sit in the same
@@ -253,7 +256,21 @@ The documents are in [`poc/corpus/`](poc/corpus/) — twelve short policy pages 
 fictional company. Upload those. They're what your project will use in Part 3, so loading
 them now means one less thing to do later.
 
-Any handful of plain text or markdown files works if you'd rather use your own.
+> **Name things exactly like this**, and Part 3 will work without you editing anything:
+>
+> | | |
+> |---|---|
+> | Catalog | `workspace` |
+> | Schema | `default` |
+> | Volume | `handbook` |
+>
+> The first two are the defaults in a new Free Edition workspace, so in practice you're
+> only choosing the volume name. If you use different names, that's fine — write them down,
+> because you'll need to put them into a notebook in Part 3.
+
+You *can* use your own documents instead. If you do, be aware that Part 3's example
+questions ("how many days of paid time off do I get?") are answered by the supplied
+corpus, so you'll need to think up questions your own documents actually answer.
 
 Use **markdown or plain text, not PDFs.** Extracting clean text from PDFs is a genuinely
 annoying problem involving layout detection, columns, and tables, and solving it teaches you
@@ -286,8 +303,9 @@ pipeline is an ETL pipeline; this is the setup for seeing it.
 
 ### Optional: let SQL call a model
 
-The tutorial demonstrates `ai_parse_document()` and `ai_query()` — functions that call a
-language model **from inside a SQL query**, across every row of a table:
+The tutorial demonstrates `ai_parse_document()` and `ai_query()`. These belong to a family
+of **AI functions** that call a language model **from inside a SQL query**, across every
+row of a table. Another of them, `ai_summarize()`, shows the idea most clearly:
 
 ```sql
 SELECT ai_summarize(document_text) FROM my_documents;
@@ -300,6 +318,36 @@ different problems — Part 3.7 covers when you'd reach for which.
 Whether these functions work on Free Edition depends on your region. The tutorial provides
 plain-Python alternatives, so try it and move on if it doesn't work. Nothing later depends
 on it.
+
+---
+
+## 2.7 One more thing, for Part 3
+
+Everything so far ran inside notebooks, on serverless compute you never had to think
+about. In Part 3 you'll connect from your own laptop instead, and that connects to a
+different thing: a **SQL warehouse** (Part 1.5 — compute built specifically for SQL
+queries).
+
+Find it now, while you're still in the interface:
+
+1. Open **SQL Warehouses** in the sidebar. Free Edition gives you one, already created —
+   you don't need to make it.
+2. Click it, then open the **Connection details** tab.
+3. You'll see **Server hostname** and **HTTP path**. Those are two of the four values
+   Part 3 needs. You don't have to copy them yet; just know where they live.
+
+> **Start the warehouse before you use it.** A warehouse that hasn't been used goes to
+> sleep, and the first query against a sleeping one takes a few minutes while it wakes up
+> — during which your script looks frozen rather than busy. If Part 3's first connection
+> seems to hang, this is almost always why. Wait it out; it only happens once.
+
+While you're here, you'll also need a **personal access token** — a long string that lets
+a program authenticate as you, instead of typing a password. Create one under
+**Settings → Developer → Access tokens → Generate new token**.
+
+> **Copy it immediately — it's shown once and never again.** If you lose it, delete it and
+> make another; there's no penalty. Treat it exactly like a password: anyone holding it can
+> do anything you can do in this workspace. Part 3 will show you where to put it safely.
 
 ---
 
@@ -353,8 +401,10 @@ you didn't have to load at all.
 > You should have, in your own workspace:
 >
 > 1. A **Delta table** you created from a file you chose
-> 2. A **volume** holding documents
+> 2. A **volume** holding documents — and you know its catalog, schema, and volume name
 > 3. A few **queries you wrote yourself** against `samples.nyctaxi.trips`
+> 4. A **personal access token**, saved somewhere safe, and you know where to find your
+>    SQL warehouse's connection details
 >
 > And you should be able to answer:
 >

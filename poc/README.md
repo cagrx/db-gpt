@@ -39,9 +39,14 @@ Free Edition notebook can't reach the OpenAI API.
 
 ## Setup
 
+From the repository root:
+
 ```bash
-pip install -r requirements.txt
-cp .env.example .env    # then fill it in
+cd poc
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+python3 -m pip install -r requirements.txt
+cp .env.example .env               # then fill it in
 ```
 
 You need four values in `.env`:
@@ -59,7 +64,7 @@ workspace, and an OpenAI key is attached to your billing.
 ## Run it
 
 ```bash
-python assistant.py
+python3 assistant.py
 ```
 
 Try:
@@ -116,3 +121,5 @@ to only what it needs.
 | `notebooks/01_explore_schema.py` | Run first, in Databricks — look at the data |
 | `notebooks/02_chunk_documents.py` | Stage 2 — documents into a table |
 | `corpus/` | Sample handbook documents for a fictional company |
+| `requirements.txt` | Python packages to install |
+| `.env.example` | Template for your credentials — copy to `.env` |

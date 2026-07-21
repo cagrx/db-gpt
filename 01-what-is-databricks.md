@@ -242,7 +242,7 @@ flowchart TB
     subgraph L["Lakehouse"]
         direction TB
         M["Metadata + transaction log<br/><i>(Delta Lake)</i><br/>schemas · atomic writes · versions"]:::meta
-        S["Cheap object storage<br/><i>(S3 / Azure / GCS)</i><br/>tables · PDFs · images · logs"]:::store
+        S["Cheap object storage<br/><i>(S3, or its equivalent<br/>on Azure or Google)</i><br/>tables · PDFs · images · logs"]:::store
         M --- S
     end
     W["Warehouse guarantees<br/>reliable · structured · fast"]:::good --> M
@@ -337,12 +337,13 @@ embarrassing in an interview. The honest landscape:
 
 ### What actually distinguishes Databricks
 
-- **They built much of the underlying technology.** Apache Spark, Delta Lake, and MLflow
-  all came out of Databricks, and they coined the term *lakehouse*. Most competitors are
+- **They built much of the underlying technology.** Apache Spark, Delta Lake, and MLflow —
+  a tool for tracking machine learning experiments and models — all came out of
+  Databricks, and they coined the term *lakehouse*. Most competitors are
   now playing in a category Databricks named.
 - **It's genuinely open-source-centric.** Spark, Delta Lake, MLflow, and Unity Catalog are
-  all open source — Unity Catalog now sits under the LF AI & Data Foundation, and MLflow
-  is a Linux Foundation project. For a company this size that's unusual, and it's a real
+  all open source, and Unity Catalog and MLflow are now governed by the Linux Foundation
+  rather than by Databricks alone. For a company this size that's unusual, and it's a real
   strategic position rather than a slogan.
 - **It's the strongest option for machine learning and heavy data engineering.** Native
   GPU support, custom model training, fine-tuning. Snowflake largely runs pre-built models

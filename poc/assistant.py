@@ -25,6 +25,24 @@ CHUNKS_TABLE = os.getenv("DATABRICKS_CHUNKS_TABLE")  # optional — Stage 2
 MAX_ROWS = 200
 CACHE = Path(__file__).parent / ".cache" / "embeddings.json"
 
+REQUIRED = (
+    "DATABRICKS_SERVER_HOSTNAME",
+    "DATABRICKS_HTTP_PATH",
+    "DATABRICKS_TOKEN",
+    "OPENAI_API_KEY",
+)
+
+# Check everything before doing anything, so a missing value produces a sentence
+# rather than a stack trace from somewhere deep in a library.
+_missing = [name for name in REQUIRED if not os.getenv(name)]
+if _missing:
+    sys.exit(
+        "Missing from your .env file: "
+        + ", ".join(_missing)
+        + "\n\nIf you haven't created it yet:  cp .env.example .env"
+        + "\nThen fill in the values -- see .env.example for where each one comes from."
+    )
+
 client = OpenAI()
 
 
@@ -59,13 +77,6 @@ def is_read_only(query: str) -> bool:
 
 
 def connect():
-    missing = [
-        v
-        for v in ("DATABRICKS_SERVER_HOSTNAME", "DATABRICKS_HTTP_PATH", "DATABRICKS_TOKEN")
-        if not os.getenv(v)
-    ]
-    if missing:
-        sys.exit(f"Missing environment variables: {', '.join(missing)}\nSee .env.example")
     return sql.connect(
         server_hostname=os.environ["DATABRICKS_SERVER_HOSTNAME"],
         http_path=os.environ["DATABRICKS_HTTP_PATH"],

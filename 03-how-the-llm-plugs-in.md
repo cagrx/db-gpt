@@ -8,6 +8,23 @@ built something that writes those queries for you — you ask in English, it ans
 That's a fun demo. It's also the clearest possible illustration of why these two
 technologies are discussed together, which is what Part 4 is about.
 
+### Four words, first
+
+These get used interchangeably everywhere, including in this guide, and it's worth
+knowing they aren't quite the same thing:
+
+- **LLM** — **large language model.** The general category of system: trained on enormous
+  amounts of text, produces text in response to text.
+- **GPT** — the family of large language models made by **OpenAI**. So GPT is an LLM, the
+  way a Volvo is a car. Other families exist: Claude from Anthropic, Gemini from Google,
+  Llama from Meta.
+- **OpenAI** — the company. You'll be calling their API.
+- **"The model"** — how this guide usually refers to whichever one you're using, since
+  nothing here depends on it being GPT specifically.
+
+The techniques in this part work with any of them. GPT is what the examples use because
+it's what the recruiter asked about.
+
 ---
 
 ## 3.1 Why GPT can't answer questions about your company
@@ -48,10 +65,20 @@ Fine-tuning has real uses. "My model doesn't know about my data" is not one of t
 
 Don't change the model. Change what you put in front of it.
 
-The model has a **context window** — the text it can consider in a single request,
-including your question and everything you've given it to work with. Modern windows are
-large. So: figure out which small slice of your data is relevant to the question, put that
-slice in the request, and ask the model to answer using it.
+Everything you send the model in one request is the **prompt**. That's the whole input —
+not just your question, but any data, examples, or instructions you include alongside it.
+The amount that fits is the **context window**, and modern windows are large.
+
+Two parts of a prompt are worth naming separately, because you'll set them in different
+places in the code:
+
+- **The user message** — the question itself, typed by whoever is using your program.
+- **The system prompt** — standing instructions that apply to every request: who the model
+  is being, what it may do, what it must not do. In the OpenAI library this is the
+  `instructions` parameter, which is the same idea under a different name.
+
+So: figure out which small slice of your data is relevant to the question, put that slice
+into the prompt, and ask the model to answer using it.
 
 Nothing is retrained. The model is doing what it's genuinely excellent at — reading text
 and writing a clear response — while the *facts* come from your systems.
@@ -61,7 +88,7 @@ This splits into two approaches depending on where the data lives:
 | Your data is | The question is | The approach |
 |---|---|---|
 | **Structured** — tables, rows, numbers | "What's the average fare by zip?" | The model writes **SQL**, you run it |
-| **Unstructured** — documents, prose | "What's our PTO policy?" | You **find relevant passages**, then give them to the model |
+| **Unstructured** — documents, prose | "What's our parental leave policy?" | You **find relevant passages**, then give them to the model |
 
 You'll build the first, then add the second. Enterprises need both, because their data is
 both.
@@ -104,9 +131,12 @@ sequenceDiagram
 ```
 
 The critical detail: **step 4 is yours.** The model asks; your code decides whether to
-comply. That's where every guardrail lives — checking the query is read-only, capping
-returned rows, refusing anything suspicious. The model has no privileges of its own. It
-only has the privileges your code chooses to exercise on its behalf.
+comply. That's where every **guardrail** lives — the checks your code runs before acting
+on what the model asked for: is this query read-only, are the returned rows capped, is
+anything about this suspicious.
+
+The model has no privileges of its own. It only has the privileges your code chooses to
+exercise on its behalf.
 
 That's also the answer to the reasonable worry *"you're letting an AI run queries on a
 database?"* You aren't. You're letting it **suggest** queries, and running the ones that
@@ -170,24 +200,55 @@ Back on your own machine, from the repository you cloned:
 
 ```bash
 cd poc
-pip install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+python3 -m pip install -r requirements.txt
 cp .env.example .env
 ```
 
-You need four values. Two come from your SQL warehouse's **Connection details** tab
-(server hostname and HTTP path). One is a personal access token from **Settings →
-Developer → Access tokens**. The fourth is an OpenAI API key.
+> **Why the `venv` line?** A **virtual environment** is a private folder of Python packages
+> for one project, so installing things here can't disturb anything else on your machine.
+> Recent Python versions on macOS and Linux will refuse a plain `pip install` outside one,
+> with an error mentioning `externally-managed-environment` — this is that error's cure,
+> not a formality.
+>
+> Use `python3` and `python3 -m pip` rather than `python` and `pip`: on macOS `python`
+> often doesn't exist at all, and `python3 -m pip` guarantees you're installing into the
+> interpreter you're about to run. You'll need to re-run the `activate` line each time you
+> open a new terminal.
+
+Now fill in `.env`. You need four values:
+
+| Value | Where it comes from |
+|---|---|
+| `DATABRICKS_SERVER_HOSTNAME` | SQL Warehouses → your warehouse → Connection details |
+| `DATABRICKS_HTTP_PATH` | Same page |
+| `DATABRICKS_TOKEN` | The token you created in Part 2.7 |
+| `OPENAI_API_KEY` | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
+
+The first three you located in Part 2.7. The fourth needs an OpenAI account.
+
+> **The OpenAI key costs money, and there's one trap.** A brand-new account has no credit,
+> and the API won't answer without it. The failure looks like `insufficient_quota`, which
+> reads like a rate limit but actually means "add a payment method." Adding a few dollars
+> is plenty — this project costs a small fraction of that — but it will stop you dead if
+> you don't expect it.
 
 > **A token is a live credential.** Anyone holding it can do anything you can do in that
 > workspace. `.env` is git-ignored in this repository and should stay that way. If you
 > ever paste one into a commit, a chat message, or a screenshot, revoke it immediately —
 > revoking is free and takes seconds.
 
-Then prove the pipe works **before involving any AI**:
+Then prove the pipe works **before involving any AI**. Save this as `test_connection.py`
+in the `poc` folder:
 
 ```python
-from databricks import sql
 import os
+
+from databricks import sql
+from dotenv import load_dotenv
+
+load_dotenv()   # reads .env and puts those values into the environment
 
 with sql.connect(
     server_hostname=os.environ["DATABRICKS_SERVER_HOSTNAME"],
@@ -199,8 +260,28 @@ with sql.connect(
         print(cursor.fetchall())
 ```
 
-If that prints a number, the hard part of the plumbing is done. If it doesn't, fix it now
-— debugging a connection is much easier without a language model in the middle.
+```bash
+python3 test_connection.py
+```
+
+**Success looks like** a single row containing a number in the millions:
+`[Row(count(1)=21932|...)]`. The exact figure doesn't matter.
+
+> A `.env` file isn't magic — nothing reads it automatically. `load_dotenv()` is the line
+> that loads it, and forgetting it is the most common reason this script reports a missing
+> variable when the value is sitting right there in the file.
+
+**If it doesn't work:**
+
+| What you see | Almost always means |
+|---|---|
+| `KeyError: 'DATABRICKS_SERVER_HOSTNAME'` | `.env` is missing, in the wrong folder, or `load_dotenv()` was left out |
+| It hangs for minutes | Your SQL warehouse is asleep. Start it and wait — see Part 2.7 |
+| `Invalid access token` | The token was mistyped or has expired. Make a new one; it's free |
+| `ModuleNotFoundError` | The virtual environment isn't active, or `pip install` was skipped |
+
+Fix this before going further. Debugging a connection is far easier without a language
+model in the middle of it.
 
 ### Step 2 — tell the model what exists
 
@@ -341,10 +422,16 @@ through steps a human could verify, show the steps.
 ### Run it
 
 ```bash
-python assistant.py
+python3 assistant.py
 ```
 
-The finished version is [`poc/assistant.py`](poc/assistant.py). Try:
+The finished version is [`poc/assistant.py`](poc/assistant.py) — everything above,
+assembled. It uses whichever model is named in `OPENAI_MODEL`, falling back to a current
+default; if you ever see `model_not_found`, that setting is the knob to turn, and
+[OpenAI's model list](https://platform.openai.com/docs/models) shows what your account can
+use.
+
+Try:
 
 - *How many trips are there?*
 - *What's the average fare?*
@@ -369,7 +456,7 @@ than by keyword.
 ### Why keyword search isn't enough
 
 Someone asks *"how much time off do I get?"* The handbook says *"20 days of paid time off
-per calendar year."* Keyword search for "time off" finds it.
+(PTO) per calendar year."* Keyword search for "time off" finds it.
 
 Now they ask *"how many vacation days?"* The document never says "vacation." Keyword
 search finds nothing, and the answer was right there.
@@ -481,11 +568,28 @@ It also means updating your data means re-running a pipeline, not retraining a m
 
 ### Load the documents *(in Databricks)*
 
-You already put the handbook documents in a volume in Part 2.6. Now turn them into a
-table: run [`poc/notebooks/02_chunk_documents.py`](poc/notebooks/02_chunk_documents.py).
+You already put the documents in a volume in Part 2.6. Now turn them into a table.
 
-Read the files, split into chunks, write a Delta table of `doc_name`, `chunk_id`,
-`chunk_text`.
+Import [`poc/notebooks/02_chunk_documents.py`](poc/notebooks/02_chunk_documents.py) into
+your workspace the same way as before (**Workspace** → **Import**).
+
+> **Check the first code cell before you run it.** It names the volume to read from:
+>
+> ```python
+> CATALOG = "workspace"
+> SCHEMA  = "default"
+> VOLUME  = "handbook"
+> ```
+>
+> If you used those names in Part 2.6, run it as-is. If you named things differently,
+> change these three lines to match — otherwise the notebook fails on the first cell that
+> reads files, with a path-not-found error naming a volume you never created.
+
+Then run all cells. It reads the files, splits them into chunks, and writes a Delta table
+of `doc_name`, `chunk_id`, `chunk_text`.
+
+**Success looks like** a printed count — something like `12 documents -> 14 chunks` — and
+a final table listing each document with its chunk count.
 
 **Notice what that is.** Extract the files, transform them into chunks, load a table.
 It's the same ETL from Part 1.6 and Part 2.4, with prose instead of rows. A retrieval
@@ -496,7 +600,14 @@ rather than arbitrary.
 
 ### Add the tool *(on your laptop)*
 
-Set `DATABRICKS_CHUNKS_TABLE` in `.env` and the assistant gains a second tool:
+Add the table you just created to `.env` — the notebook prints its full name at the end,
+and it's `<catalog>.<schema>.handbook_chunks`:
+
+```
+DATABRICKS_CHUNKS_TABLE=workspace.default.handbook_chunks
+```
+
+The assistant checks for that variable at startup, and if it's there, gains a second tool:
 
 ```python
 DOCS_TOOL = {
@@ -510,8 +621,8 @@ DOCS_TOOL = {
 }
 ```
 
-Embeddings are computed once and cached, so you pay for them a single time. For this
-corpus that's a fraction of a cent.
+Embeddings are computed once and cached, so you pay for them a single time. For a
+**corpus** — a collection of documents — this small, that's a fraction of a cent.
 
 ### The moment it clicks
 

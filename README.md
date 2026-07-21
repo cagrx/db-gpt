@@ -7,8 +7,8 @@ By the end you'll be able to explain what Databricks is, how large language mode
 into it, and why companies want the combination — and you'll have built a small working
 thing that proves you've actually used both.
 
-> **Status: in progress.** Part 1 is written. Parts 2–4 and the project code are still
-> being drafted, so some links below don't resolve yet.
+> **Status: in progress.** Parts 1–3 and the project are finished and usable. Part 4 and
+> the reference pages are still being written — those two links don't resolve yet.
 
 ## Who this is for
 
@@ -40,7 +40,7 @@ how the idea stops being abstract.
 | **3** | [How the LLM plugs in](03-how-the-llm-plugs-in.md) | Build the assistant · ~6–8h |
 | **4** | [Why anyone wants this](04-why-anyone-wants-this.md) | The part that matters · ~2h |
 
-Roughly 15–20 hours total. That's an estimate, not a target — finishing sooner is
+Roughly 16–21 hours total. That's an estimate, not a target — finishing sooner is
 better, not worse.
 
 Read them in order. Each part sets up the next, and the thing you build in Part 3 uses
@@ -65,7 +65,8 @@ You'll also need:
 - **An OpenAI API key** — *this one costs money.* Not much: the whole project runs for
   well under a few dollars at current prices. But it isn't free, and you should know that
   before you start rather than after.
-- **Python 3.9+** and a terminal you're comfortable in.
+- **Python 3.9+**, **git**, and a terminal you're comfortable in. Part 3 uses `python3`
+  and a virtual environment, and explains both when you get there.
 
 ## What this isn't
 

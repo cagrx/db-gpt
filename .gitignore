@@ -3,6 +3,9 @@
 .env.*
 *.pem
 
+# ...but the template must ship, or `cp .env.example .env` fails for everyone
+!.env.example
+
 # Python
 __pycache__/
 *.py[cod]
