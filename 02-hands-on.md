@@ -5,8 +5,7 @@
 Part 1 was the shape of the problem. This part is where you actually touch the platform.
 
 The goal is modest and specific: be able to say *"I've used Databricks notebooks to
-process data"* and have it be true. Not mastery. You are not going to become a data
-engineer in six hours, and pretending otherwise would waste your time.
+process data"* and have it be true.
 
 ### How this part works
 
