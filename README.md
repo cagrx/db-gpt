@@ -48,6 +48,18 @@ the data you loaded in Part 2.
 
 ## Before you start
 
+**Get a copy of this repository.** You'll need the sample documents in Part 2 and the
+project code in Part 3:
+
+```bash
+git clone https://github.com/cagrx/db-gpt.git
+cd db-gpt
+```
+
+You can read the guide here on GitHub, but the files have to be on your machine.
+
+You'll also need:
+
 - **A Databricks Free Edition account** — free, no credit card. Part 2 walks you through
   it. It's quota-limited, and Part 2 explains what that means before you can trip over it.
 - **An OpenAI API key** — *this one costs money.* Not much: the whole project runs for

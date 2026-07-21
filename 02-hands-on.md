@@ -241,9 +241,19 @@ Up to now you've taken that on faith. This is where you stop taking it on faith.
 documents into the same platform holding your taxi data, in the same catalog, under the
 same permissions.
 
-**For the files:** use the documents in [`poc/corpus/`](poc/corpus/) in this repository —
-they're what your project will use in Part 3, so loading them now means one less thing
-later. Any handful of plain text or markdown files works if you'd rather use your own.
+**For the files:** use the sample documents that come with this guide. If you haven't
+already cloned the repository:
+
+```bash
+git clone https://github.com/cagrx/db-gpt.git
+cd db-gpt
+```
+
+The documents are in [`poc/corpus/`](poc/corpus/) — twelve short policy pages for a
+fictional company. Upload those. They're what your project will use in Part 3, so loading
+them now means one less thing to do later.
+
+Any handful of plain text or markdown files works if you'd rather use your own.
 
 Use **markdown or plain text, not PDFs.** Extracting clean text from PDFs is a genuinely
 annoying problem involving layout detection, columns, and tables, and solving it teaches you

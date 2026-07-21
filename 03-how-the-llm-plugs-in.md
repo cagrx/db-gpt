@@ -136,9 +136,22 @@ notebook probably can't reach the OpenAI API. But even on a paid workspace with 
 limit, this is the right shape. And it means you end up with a real repository you can
 run, show, and put on GitHub, rather than a screenshot of a notebook.
 
+### Get the code
+
+Everything from here uses files in this repository. If you cloned it in Part 2 you're
+ready; if not:
+
+```bash
+git clone https://github.com/cagrx/db-gpt.git
+cd db-gpt
+```
+
 ### Step 0 — look at the data first *(in Databricks)*
 
-Open a notebook and run [`poc/notebooks/01_explore_schema.py`](poc/notebooks/01_explore_schema.py).
+Import [`poc/notebooks/01_explore_schema.py`](poc/notebooks/01_explore_schema.py) into
+your workspace and run it. *(In Databricks: **Workspace** → **Import** → drop the file in.
+It's a notebook in Databricks' own source format, so it arrives as a proper notebook, not
+as a text file.)*
 
 You're going to tell a model what's in this table. You can't do that until you know
 yourself.
@@ -152,6 +165,8 @@ this is why, and knowing it in advance is the difference between debugging and c
 > number or a string with leading zeros. Look at actual rows before assuming.
 
 ### Step 1 — connect from your laptop
+
+Back on your own machine, from the repository you cloned:
 
 ```bash
 cd poc
