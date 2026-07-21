@@ -52,6 +52,29 @@ The value isn't "a chatbot." It's that a question like *"why are European custom
 complaining about Product X?"* becomes a thing you can ask on a Tuesday afternoon instead
 of a two-week project you have to justify.
 
+### "Why is this happening now?"
+
+You'll get asked some version of this, and the obvious answer — *"because ChatGPT"* — is
+only half of it, and the less interesting half.
+
+The bottleneck in 4.1 has existed for as long as companies have had data. What changed
+isn't only that language models got good. It's that **by the time they did, the
+infrastructure was already in place.**
+
+As Part 1.2 covered, this field is decades old. Companies spent the 2010s consolidating
+systems, building pipelines, cleaning data, and cataloguing what they had — for business
+reporting and traditional machine learning, with no idea an LLM was coming. When one
+arrived, the companies that had done that work could connect it to real data in weeks.
+
+**The ones that hadn't, couldn't** — and still can't, because a model pointed at a data
+swamp gives confident answers from garbage. Retrieval only works if there's something
+trustworthy to retrieve from.
+
+That's the more complete answer: *language models became the interface to data platforms
+that were already built.* The AI is the new part. The reason it works is the decade of
+unglamorous groundwork underneath it — which, not coincidentally, is also why the
+governance in 4.3 is the moat rather than the model.
+
 ---
 
 ## 4.2 What this actually replaces

@@ -63,6 +63,11 @@ LLM.
 **Guardrail** — a check your code runs before acting on what a model asked for. In this
 project: rejecting anything that isn't a single `SELECT`, and capping returned rows.
 
+**Hadoop** — the 2006 system that started the "big data" era: distributed storage and
+processing spread across many ordinary machines. Largely superseded — Spark replaced its
+processing model, and cloud object storage replaced its file system — but it's why data
+lakes became possible.
+
 **Hallucination** — a model producing confident, plausible, wrong output. The central
 problem when pointing a language model at questions about your business.
 
@@ -151,11 +156,17 @@ flexible; becomes a *data swamp* when nobody can find or trust anything in it.
 **Audit** — an inspection, internal or external, checking that rules were followed. The
 reason systems log who accessed what.
 
+**Business intelligence (BI)** — reporting and dashboards for business decisions.
+Unglamorous, and still the largest use of most data platforms.
+
 **Compliance** — following legally required rules about how data is stored, accessed, and
 deleted.
 
 **CRM** — Customer Relationship Management. Software tracking customers and sales;
 Salesforce is the best-known.
+
+**Customer 360** — assembling a single view of a customer from the several systems that
+each hold part of the picture. A perennial enterprise project.
 
 **Enterprise** — not simply "big company." A situation: many teams, many systems built at
 different times by people who have left, real money and regulators attached to mistakes.

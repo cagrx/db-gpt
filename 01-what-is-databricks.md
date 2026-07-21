@@ -273,6 +273,60 @@ responding to.
 The last row matters. A lakehouse isn't free of downsides — it's a more complicated thing
 to operate than any single row before it. It's a trade, not a miracle.
 
+### What all this was for, before AI
+
+Worth being clear about something, because the current conversation obscures it: **none of
+this was built for language models.** This field is decades old and had a large, healthy
+industry long before anyone had heard of ChatGPT.
+
+| | |
+|---|---|
+| **1990** | Bill Inmon publishes *Building the Data Warehouse*, and the data warehousing industry starts in earnest |
+| **2006** | Hadoop is released — cheap distributed storage and processing across ordinary machines. The "big data" era |
+| **2010** | James Dixon coins the term **data lake**. Spark is open-sourced at UC Berkeley, replacing Hadoop's slower processing model |
+| **2013** | Databricks is founded by Spark's creators |
+| **2019** | Databricks open-sources **Delta Lake**, adding transactions to data lakes |
+| **2020** | Databricks publishes the **lakehouse** concept |
+| **late 2022** | ChatGPT |
+
+Look at the gap. **Databricks had been a substantial company for nearly a decade before
+large language models became interesting.** So what were people doing with all this?
+
+**Business intelligence and reporting.** By far the biggest use, and still is. Dashboards,
+quarterly numbers, regulatory filings, "how did the Northeast region do last month." Deeply
+unglamorous, enormously valuable, and the thing most data platforms mostly do.
+
+**Traditional machine learning.** This was "AI" before LLMs, and it's still where most
+production machine learning lives: predicting which customers will cancel, flagging
+fraudulent transactions, recommending products, forecasting demand, scoring credit
+applications. These models are trained on your own tables, and a company doing this at any
+scale needs exactly the infrastructure described above.
+
+**Operational and log analytics.** Every server, application, and device emits a stream of
+events. Data lakes were often adopted for this alone — it's high-volume, low-value-per-row,
+and never fits a rigid schema.
+
+**Customer 360.** Stitching one view of a customer from the six systems that each know part
+of the story. The retailer from 1.1, solved.
+
+### Why the timing matters
+
+Here's the part worth carrying into a conversation.
+
+When language models suddenly became useful, the companies that could act on it were the
+ones that had spent the previous decade doing unglamorous work: consolidating systems,
+cleaning data, building pipelines, and cataloguing what they had.
+
+**Retrieval-augmented generation only works if there's something reliable to retrieve
+from.** A model pointed at a data swamp produces confident answers from garbage. The
+decade of ETL work nobody wanted to fund is precisely what made the AI moment possible for
+the companies that did it.
+
+So this isn't a story about AI creating a need for data platforms. It's a story about a
+mature, boring, well-established field turning out to be the foundation for something
+nobody was planning for. That's also why Databricks could add AI features quickly rather
+than being disrupted by them — they already had the hard part.
+
 ---
 
 ## 1.3 So what *is* Databricks?
