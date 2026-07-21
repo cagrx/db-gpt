@@ -297,8 +297,28 @@ of your schema. You fetch the column names and paste them into the instructions:
 cursor.execute("DESCRIBE TABLE samples.nyctaxi.trips")
 ```
 
-…and the result becomes part of what you send. The model reads "there is a column called
-`fare_amount` of type double" and writes SQL accordingly.
+**`DESCRIBE TABLE` asks the database about itself.** Instead of returning rows of taxi
+trips, it returns one row per *column* — its name, its data type, and any comment:
+
+```
+col_name               data_type
+---------------------  ---------
+tpep_pickup_datetime   timestamp
+tpep_dropoff_datetime  timestamp
+trip_distance          double
+fare_amount            double
+pickup_zip             int
+dropoff_zip            int
+```
+
+That distinction is worth holding onto: nearly all the SQL you've written asks about the
+*data*, while this asks about the *shape of the data* — its **metadata**. MySQL has the
+same `DESCRIBE` command, so you may already have met it. You also ran this in the notebook
+in Step 0; this is the same query, now called from Python so its output can be fed
+somewhere.
+
+And that somewhere is the prompt. The result becomes part of what you send: the model
+reads "there is a column called `fare_amount` of type double" and writes SQL accordingly.
 
 Once you've seen this, a whole category of AI product stops being mysterious. Most of them
 are this: take something the model can't know, look it up, put it in the prompt.
