@@ -370,6 +370,9 @@ def is_read_only(query: str) -> bool:
 Three rules: it must start with `SELECT` or `WITH`, it must not contain a second statement
 after a semicolon, and it must not contain a destructive keyword.
 
+*(`WITH` starts a query that defines a temporary named result first and then selects from
+it. It's still read-only, so it's allowed.)*
+
 This is deliberately blunt, and it will sometimes reject a query that was fine — one
 containing the word "update" inside a string literal, say. **That's the correct trade.** A
 false rejection costs you one retry. A false acceptance costs you a table.

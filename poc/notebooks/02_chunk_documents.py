@@ -31,6 +31,13 @@ OVERLAP_WORDS = 40
 # MAGIC
 # MAGIC `wholetext=True` gives one row per file rather than one row per line, which is what
 # MAGIC we want since we are about to split them ourselves.
+# MAGIC
+# MAGIC `_metadata` is a hidden column Spark attaches to anything read from files, holding
+# MAGIC details about where each row came from. We pull `file_name` out of it so every
+# MAGIC chunk remembers its source document — which is what makes citations possible later.
+# MAGIC
+# MAGIC `selectExpr` is `select` that accepts SQL expressions as strings, which is the
+# MAGIC easiest way to reach into a nested column like that one.
 
 # COMMAND ----------
 
@@ -59,6 +66,21 @@ display(raw.select("doc_name"))
 # MAGIC falls on a boundary still appears whole in one of them. Without overlap, the single
 # MAGIC most important sentence in a document can end up split across two chunks and match
 # MAGIC neither.
+# MAGIC
+# MAGIC ### Three Spark things in the next cell
+# MAGIC
+# MAGIC The splitting itself is ordinary Python. Getting Spark to *apply* it needs three
+# MAGIC pieces you probably haven't met:
+# MAGIC
+# MAGIC - **`udf`** — a **user-defined function.** Spark's built-in functions run across a
+# MAGIC   cluster; your own Python function doesn't, until you wrap it in a `udf` so Spark
+# MAGIC   can ship it out to every machine and run it on each row.
+# MAGIC - **`explode`** — our function returns a *list* of chunks per document, giving one
+# MAGIC   row with a list in it. `explode` turns that list into one row per element. Twelve
+# MAGIC   rows of lists become fourteen rows of chunks.
+# MAGIC - **`monotonically_increasing_id()`** — generates a unique number per row. Awkward
+# MAGIC   name, simple job: we need an id for each chunk, and rows are spread across
+# MAGIC   machines, so a plain counter wouldn't work.
 
 # COMMAND ----------
 
@@ -101,6 +123,14 @@ display(chunked.limit(5))
 
 # MAGIC %md
 # MAGIC ## Load — write the table
+# MAGIC
+# MAGIC `saveAsTable` writes a real, permanent Delta table into Unity Catalog — the same
+# MAGIC kind of table you made from a CSV in Part 2.4, and queryable by anyone you grant
+# MAGIC access to.
+# MAGIC
+# MAGIC `mode("overwrite")` replaces the table if it already exists, so you can safely
+# MAGIC re-run this notebook after changing the chunk size or editing a document. Without
+# MAGIC it, a second run would fail rather than update.
 
 # COMMAND ----------
 

@@ -16,7 +16,13 @@ TABLE = "samples.nyctaxi.trips"
 # MAGIC %md
 # MAGIC ## What columns exist, and what type is each?
 # MAGIC
-# MAGIC This is exactly what goes into the assistant's system prompt later.
+# MAGIC `DESCRIBE TABLE` asks the database about *itself* rather than about the data. It
+# MAGIC returns one row per column — name, type, and any comment. This is exactly what
+# MAGIC goes into the assistant's instructions later.
+# MAGIC
+# MAGIC `display()` is a Databricks function, not standard Python. It renders a result as
+# MAGIC a sortable, filterable table with charting built in, rather than the wall of text
+# MAGIC `print()` would give you. Use it for anything you actually want to look at.
 
 # COMMAND ----------
 

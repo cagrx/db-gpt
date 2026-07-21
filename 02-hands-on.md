@@ -153,6 +153,10 @@ many machines, each handling a slice, with results combined at the end.
 You don't manage any of that. But it's why the same code works on a thousand rows and a
 billion, and it's the answer if someone asks what Spark is actually for.
 
+> **You'll see `display(...)` throughout the tutorials.** It's a Databricks function,
+> not standard Python — it renders a result as a sortable, filterable table with charting
+> built in, instead of the wall of text `print()` gives you.
+
 ### And you can just use SQL
 
 ```python
