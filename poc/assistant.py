@@ -127,13 +127,11 @@ def load_chunks(cursor) -> list[dict]:
     rows = cursor.fetchall()
     print(f"Embedding {len(rows)} chunks (one time only)...")
 
-    chunks = []
-    for start in range(0, len(rows), 100):  # batch, to stay within request limits
-        batch = rows[start : start + 100]
-        for row, vector in zip(batch, embed([r[2] for r in batch])):
-            chunks.append(
-                {"doc": row[0], "chunk_id": row[1], "text": row[2], "vector": vector}
-            )
+    vectors = embed([row[2] for row in rows])
+    chunks = [
+        {"doc": row[0], "chunk_id": row[1], "text": row[2], "vector": vector}
+        for row, vector in zip(rows, vectors)
+    ]
 
     CACHE.parent.mkdir(parents=True, exist_ok=True)
     CACHE.write_text(json.dumps(chunks))
@@ -227,9 +225,8 @@ more with a corrected query.
 # --------------------------------------------------------------------------
 
 
-def answer(question: str, cursor, tools, schema, chunks) -> str:
+def answer(question: str, cursor, tools, instructions: str, chunks) -> str:
     conversation = [{"role": "user", "content": question}]
-    instructions = system_prompt(schema, has_docs=chunks is not None)
 
     for _ in range(6):  # bounded, so a confused model cannot loop forever
         response = client.responses.create(
@@ -272,6 +269,8 @@ def main() -> None:
             chunks = load_chunks(cursor)
             tools.append(DOCS_TOOL)
 
+        instructions = system_prompt(schema, has_docs=chunks is not None)
+
         print(f"Connected. Asking about {TABLE}.")
         print("Type a question, or Ctrl-C to quit.\n")
 
@@ -283,7 +282,7 @@ def main() -> None:
                 return
             if not question:
                 continue
-            print(answer(question, cursor, tools, schema, chunks) + "\n")
+            print(answer(question, cursor, tools, instructions, chunks) + "\n")
 
 
 if __name__ == "__main__":
