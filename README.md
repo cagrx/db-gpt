@@ -58,6 +58,27 @@ cd db-gpt
 
 You can read the guide here on GitHub, but the files have to be on your machine.
 
+**What you just downloaded.** You don't need to create any of this — it all comes with
+the clone:
+
+```
+db-gpt/
+├── README.md                     this page
+├── 01-what-is-databricks.md      the four parts, read in order
+├── 02-hands-on.md
+├── 03-how-the-llm-plugs-in.md
+├── 04-why-anyone-wants-this.md
+├── poc/                          the project you build in Part 3
+│   ├── assistant.py              the finished program
+│   ├── corpus/                   sample documents — you'll upload these in Part 2
+│   ├── notebooks/                run these two inside Databricks
+│   ├── requirements.txt          Python packages to install
+│   └── .env.example              template for your credentials
+└── reference/                    glossary, links, Free Edition limits
+```
+
+When Part 3 says `cd poc`, that's the folder above — it's already there.
+
 You'll also need:
 
 - **A Databricks Free Edition account** — free, no credit card. Part 2 walks you through
