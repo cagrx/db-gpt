@@ -451,9 +451,10 @@ all good ones — because each shows you know where the edges are.
 
 **"Have you used Spark?"**
 Be accurate. "I've used Spark DataFrames in Databricks notebooks to load and transform
-data, and written a chunking pipeline over a set of documents. I haven't tuned Spark or
-worked at large scale." Precise beats impressive; the follow-up question will find you out
-otherwise.
+data, and run a chunking pipeline over a set of documents. I haven't tuned Spark or worked
+at large scale." Precise beats impressive; the follow-up question will find you out
+otherwise — and *run* versus *wrote* is exactly the kind of word an interviewer notices you
+choosing carefully.
 
 ---
 

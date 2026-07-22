@@ -159,7 +159,10 @@ You did real work with these and can talk about them without hedging.
 |---|---|
 | **Notebooks** | Ran seven of them — five official tutorials and two from this repository |
 | **Volumes** | Created one, uploaded documents, read them back by path |
-| **Spark** | `spark.read`, `spark.sql`, a user-defined function, `explode`, `saveAsTable` — read, transform, write |
+
+Also genuinely yours, even though neither is a Databricks product: the **SQL** you wrote
+against `samples.nyctaxi.trips`, and the **application** in Part 3. Those are the things
+you built rather than followed.
 
 ### Touched, but incidentally
 
@@ -171,6 +174,7 @@ Describe them carefully.
 | **Delta Lake** | You have Delta tables because it's the default format, not because you chose it. You never used time travel, `MERGE`, or schema evolution — the features that make Delta *Delta*. Say *"the tables I created were Delta tables"*, not *"I've worked with Delta Lake."* |
 | **Unity Catalog** | You ran one `GRANT` and typed a lot of three-part names. You didn't touch lineage, tags, discovery, or metric views — which is most of what it's for, and most of what Part 4.3 argues matters. Say *"I set permissions on a table in Unity Catalog."* |
 | **SQL warehouses** | You found the connection details and pointed a script at one. You never created, sized, or administered a warehouse. Say *"I connected to a SQL warehouse from a local application."* |
+| **Spark** | You ran Spark code, and the CSV work in 2.4 is genuine DataFrame use — read, transform, write. But it ran on tiny data, on serverless compute you didn't configure, and the one substantial transformation (the chunking notebook) you imported and ran rather than wrote. You never met distribution, partitioning, or scale, which is the entire reason Spark exists. Say *"I've used Spark DataFrames in notebooks to load and transform data. I haven't tuned Spark or worked at scale."* |
 
 ### Not touched
 
