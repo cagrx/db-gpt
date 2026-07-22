@@ -148,19 +148,39 @@ Genie Agent as a component.
 
 ## What you actually touched
 
-Of everything above, this guide had you use six things:
+Worth being precise about this, because "it was in my workspace" and "I used it" are
+different claims, and only one of them survives a follow-up question.
 
-| | Where |
+### Genuinely hands-on
+
+You did real work with these and can talk about them without hedging.
+
+| | What you actually did |
 |---|---|
-| **Notebooks** | Part 2, throughout |
-| **Delta Lake** tables | 2.4 — created without you having to ask for it |
-| **Volumes** | 2.6 — the handbook documents |
-| **Unity Catalog** | 2.5 — grants; and every three-part table name you typed |
-| **SQL warehouses** | 2.7 and Part 3 — what your laptop connected to |
-| **Spark** | 2.3, 2.4, and the chunking notebook |
+| **Notebooks** | Ran seven of them — five official tutorials and two from this repository |
+| **Volumes** | Created one, uploaded documents, read them back by path |
+| **Spark** | `spark.read`, `spark.sql`, a user-defined function, `explode`, `saveAsTable` — read, transform, write |
 
-Everything else on this page is context. You don't need it to finish, and you shouldn't
-claim familiarity with tools you haven't opened.
+### Touched, but incidentally
+
+These were present and you used them without engaging with what makes them interesting.
+Describe them carefully.
+
+| | The honest version |
+|---|---|
+| **Delta Lake** | You have Delta tables because it's the default format, not because you chose it. You never used time travel, `MERGE`, or schema evolution — the features that make Delta *Delta*. Say *"the tables I created were Delta tables"*, not *"I've worked with Delta Lake."* |
+| **Unity Catalog** | You ran one `GRANT` and typed a lot of three-part names. You didn't touch lineage, tags, discovery, or metric views — which is most of what it's for, and most of what Part 4.3 argues matters. Say *"I set permissions on a table in Unity Catalog."* |
+| **SQL warehouses** | You found the connection details and pointed a script at one. You never created, sized, or administered a warehouse. Say *"I connected to a SQL warehouse from a local application."* |
+
+### Not touched
+
+Everything else on this page. Including — worth naming, because they're the tempting
+ones — Genie, Agent Bricks, Vector Search, MLflow, Model Serving and Lakeflow.
+
+That isn't a gap to apologise for. **Being able to say precisely what you have and haven't
+used is itself a signal**, and it's more convincing than a longer list you can't defend.
+The follow-up question is always "tell me about that" — and the difference between a
+person who used something and one who read about it becomes obvious in about ten seconds.
 
 ---
 

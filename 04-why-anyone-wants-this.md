@@ -407,6 +407,12 @@ first.
 - Text-to-SQL can answer a subtly different question than the one asked, which is why
   showing the SQL isn't optional
 
+**And be precise about the platform itself.** "I've worked with Delta Lake" and "the
+tables I created happened to be Delta tables" are different claims, and only one of them
+survives *"tell me about that."* [The map](reference/databricks-map.md#what-you-actually-touched)
+separates what you genuinely used from what was merely present in your workspace — worth
+reading before an interview.
+
 That second list is the one that lands. **Volunteering the limitations of your own work is
 the single strongest signal you understand it.** It's also the difference between someone
 who followed a tutorial and someone who thought about what they built.
