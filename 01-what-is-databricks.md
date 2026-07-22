@@ -640,8 +640,9 @@ flowchart LR
     classDef hl fill:#f2e8f7,stroke:#8a5ba8,color:#2a1a3a
 ```
 
-The left side is the mess from 1.1. The middle is what this part explained. The right
-side is why anyone cares — and the top-right box is what you're going to build.
+The left side is the mess from 1.1. The middle is what this part explained. The right side
+is why anyone cares: analysts querying trustworthy data, and — in the **LLM applications**
+box — what you're going to build in Part 3.
 
 ---
 
