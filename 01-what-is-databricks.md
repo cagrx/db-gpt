@@ -444,7 +444,10 @@ support both formats. The format war is ending in convergence rather than a winn
 
 ## 1.5 The pieces that actually matter
 
-Databricks has a large surface area. These are the parts worth knowing now.
+Databricks has a large surface area. These are the parts worth knowing now — and the
+only ones this guide asks you to use. If a product name comes up elsewhere that isn't
+here, [the map](reference/databricks-map.md) covers the wider picture and what each
+piece is for.
 
 ### Apache Spark
 

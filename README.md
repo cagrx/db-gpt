@@ -93,6 +93,7 @@ credibly, and having something real to point at when you do.
 
 ## Reference
 
+- [Map of Databricks](reference/databricks-map.md) — the products, and what each one is for
 - [Glossary](reference/glossary.md) — technical *and* business terms, both defined
 - [Links](reference/links.md) — every external resource, verified
 - [Free Edition limits](reference/free-edition-limits.md) — what you can't do, and why
