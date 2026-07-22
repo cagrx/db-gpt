@@ -176,6 +176,13 @@ points for avoiding SQL.
 You'll take a CSV file, put it in a **volume**, read it into a DataFrame, fix a column
 name, and save it as a table.
 
+> **This is the shape of ETL, not the difficulty of it.** Yours reads one clean file you
+> uploaded yourself, changes one column, and runs once because you pressed run. A
+> production pipeline pulls from source systems that change without warning, reconciles
+> the kind of mess in Part 1.6, decides what to do with rows that fail, and runs on a
+> schedule forever. Worth knowing which part you've done — the three motions are the easy
+> bit, and everything around them is the job.
+
 That sequence is **ETL** — the thing Part 1.6 described:
 
 | | What you're doing |

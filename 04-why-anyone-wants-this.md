@@ -449,6 +449,15 @@ Have a real answer ready. Conversation memory, an evaluation set for retrieval q
 moving the API key into something like Databricks' AI Gateway rather than a `.env` file are
 all good ones — because each shows you know where the edges are.
 
+**"Have you built data pipelines?"**
+Be careful with this one — it's the question most likely to be asked by anyone hiring for
+data work. "I've done the extract, transform and load steps by hand in a notebook: read a
+file, cleaned it, wrote a table. I haven't built a scheduled pipeline against a live
+source system, and I think the hard parts are the ones I haven't hit — reconciling messy
+source data, handling the rows that fail, and keeping it running when a source system
+changes without telling you." **A transformation you ran once is not a pipeline.** Saying
+so is better than being found out one question later.
+
 **"Have you used Spark?"**
 Be accurate. "I've used Spark DataFrames in Databricks notebooks to load and transform
 data, and run a chunking pipeline over a set of documents. I haven't tuned Spark or worked
