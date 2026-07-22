@@ -211,6 +211,12 @@ over returning many raw rows, and always use LIMIT when returning individual row
         prompt += """
 Use search_documents for questions about policy, process or rules. When you answer from
 documents, cite the source file you used.
+
+Some questions need both tools. If a question depends on a value that policy defines --
+a limit, a threshold, an allowance -- look it up with search_documents first, then use
+that value in your SQL. Never guess such a number: if the documents do not contain it,
+say so rather than assuming one. When you answer this way, state the value you found,
+where it came from, and the query you ran.
 """
     prompt += """
 If the data cannot answer the question, say so plainly. Never invent a number, and never
@@ -243,11 +249,16 @@ def answer(question: str, cursor, tools, instructions: str, chunks) -> str:
 
         for call in calls:
             args = json.loads(call.arguments)
+            # Print every step. When a question needs both tools, the interesting part
+            # is watching a value come out of the documents and into the SQL.
             if call.name == "run_sql":
                 print(f"\n  SQL: {args['query']}\n")
                 result = run_sql(cursor, args["query"])
             else:
+                print(f"\n  Searching documents: {args['question']}")
                 result = search_documents(chunks, args["question"])
+                found = sorted({r["source"] for r in result["results"]})
+                print(f"  Found in: {', '.join(found)}\n")
             conversation.append(
                 {
                     "type": "function_call_output",

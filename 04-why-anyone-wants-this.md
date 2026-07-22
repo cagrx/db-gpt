@@ -136,6 +136,31 @@ the entire enterprise AI security model.** The model has no privileges. It asks 
 to run things, and your code connects with credentials that Unity Catalog has already
 constrained.
 
+### The other half, which is newer
+
+Permissions are the obvious part. The less obvious part is that **the catalog is what
+makes data findable by a machine at all.**
+
+Part 3.8 showed why: at three thousand tables you can't hand the model everything, so it
+works out what's relevant by reading the descriptions attached to tables and columns.
+`promised_at` tells it nothing. *"Supplier-committed delivery time, null for walk-ins"*
+tells it everything. A column comment has stopped being documentation hygiene and become
+functional infrastructure — the thing an agent navigates by.
+
+That produces a genuinely strange consequence, and it's the most useful thing in this
+section:
+
+> **When the assistant gets an answer wrong, the fix is usually not in the application.**
+
+It's a missing column description, an ambiguous table name, a metric that should have been
+defined centrally, a business rule nobody ever wrote down. You improve the catalog and the
+assistant improves — no code change, no retraining, and every other consumer of that data
+benefits at the same time. **The maintenance surface is documentation, not model weights.**
+
+It's also the sharpest version of the answer to *"why not just build this yourself?"* You
+can build the demo in a weekend. You cannot annotate ten years of tables in a weekend, and
+no model will do it for you convincingly enough to trust.
+
 Which is why "boring" governance features are what these platforms actually sell.
 
 ---
@@ -178,7 +203,129 @@ Part 3 rather than a nice-to-have.
 
 ---
 
-## 4.5 What to call it
+## 4.5 What you'd actually do at work
+
+You built every piece of yours by hand. At work, you'd assemble far more of it than you
+wrote — and the shape of that is worth knowing before someone asks.
+
+### Most of it is configuration, not code
+
+For the specific job of *letting business people ask questions*, there's a ladder, and
+most teams start at the top rung:
+
+| | What it is | Who sets it up |
+|---|---|---|
+| **Genie Space** | No code. Pick tables from Unity Catalog, write instructions carrying business logic, add example question-and-query pairs. Business users get a chat interface. | An analyst or domain expert |
+| **Genie embedded** | The same thing surfaced inside a dashboard, Slack, or Teams | Same, plus light plumbing |
+| **Databricks Apps** | A custom interface hosted in the workspace, which can embed a Genie Agent as a component | A developer, in days |
+| **Agent Bricks** | Building custom agents on governed lakehouse data, with support for frameworks like LangGraph, CrewAI and the OpenAI Agents SDK | A platform or AI engineering team |
+
+**Your project sits roughly at the bottom rung, hand-rolled** — which is the right place
+to *learn* and the wrong place to *start* at work. Most teams reach for a Genie Space
+first and only descend when it genuinely can't do the job.
+
+Other platforms have equivalents: Snowflake has Cortex Analyst, the BI vendors have bolted
+natural language onto their tools, and separate products cover the document half.
+
+### So what do teams build?
+
+Roughly in order of effort spent:
+
+1. **The data and metadata work.** Curating trustworthy tables, writing column
+   descriptions, defining metrics once, getting three teams to agree what "active
+   customer" means. There is no AI in this, and it is the majority of the project.
+2. **Agents that *do* things**, not just answer — open a ticket, trigger a reorder, draft
+   a supplier email. Custom code earns its place here, because the actions are specific to
+   the business.
+3. **Putting it where people already are.** Slack, Teams, the internal tool they already
+   have open — rather than a new destination.
+4. **Evaluation.** Test questions with known answers, re-run on every change. Rare, and
+   the clearest marker of a team that's serious.
+5. **Routing**, once there's more than one domain agent.
+
+### Is it a chatbot?
+
+Partly — but the trend is *away* from a standalone chat window, for an unglamorous
+reason. **Enterprise assistants fail in production because of interface and adoption far
+more often than because the model was wrong.** A separate chat tool is one more thing to
+remember; a natural-language box inside the dashboard someone already opens gets used.
+
+### What about autonomous agents?
+
+Here the marketing runs well ahead of what's deployed, and being able to say so calmly is
+a good look:
+
+- Gartner places AI agents at the **peak of inflated expectations**, and expects **over
+  40% of agentic AI projects to be cancelled by the end of 2027**
+- Most production deployments keep a **human in the loop**; "fully autonomous" is largely
+  aspirational
+- Only about **1 in 5** companies has a mature governance model for autonomous agents
+- **52% cite data quality as the single biggest blocker** — not model capability
+
+Where autonomy is real today it's narrow: scheduled monitoring that summarises anomalies
+and alerts a person, classification or extraction running automatically as data arrives
+(the batch pattern from 3.7), and reversible actions behind an approval step. Not an agent
+roaming the warehouse discovering insights.
+
+That 52% is worth remembering — it's independent confirmation of everything Part 1 argued.
+The thing standing between most companies and this capability is the state of their data.
+
+### Where does GPT fit?
+
+An honest wrinkle: **in a Databricks-native deployment, GPT might not appear at all.**
+Genie uses models served on the platform. A company could run this entire stack on Llama,
+or on Anthropic models, and never touch OpenAI. "Learn Databricks and GPT" is shorthand
+for *the enterprise AI stack*, not a literal architecture.
+
+The skills transfer directly, though, for a specific reason: **Databricks' Model Serving
+deliberately exposes an OpenAI-compatible API.** The same client code works
+whether the model underneath is from OpenAI, Anthropic, or Databricks' own catalogue.
+Frequently it's not "similar concepts, different code" — it's the same code with a
+different endpoint. Tool calling, system prompts, embeddings, retrieval: all portable.
+
+Where GPT specifically does show up:
+
+- **Through AI Gateway / External Models** — a company with an OpenAI agreement registers
+  it as a governed endpoint inside Databricks, so one place holds the key with rate
+  limits and logging. The grown-up version of your `.env` file.
+- **Multi-model setups** — a capable model for hard reasoning, a cheaper one for
+  high-volume batch work, an open-weight one where data can't leave the building.
+- **In the application layer** — which often calls a model provider directly, exactly as
+  your project does.
+
+The framing worth carrying into an interview:
+
+> **The model is the most replaceable part of the architecture. The data platform is the
+> least.**
+
+You can swap GPT for Claude for Llama in an afternoon — same interface, different
+endpoint. You cannot swap your data platform in an afternoon, or in a year. That
+asymmetry explains why platform vendors compete on governance rather than cleverness, and
+why "which model" is closer to a procurement decision than an architectural one.
+
+It also tells you how the two halves age. **Platform knowledge compounds** — SQL, Spark,
+modelling and governance are as relevant now as a decade ago. **Model knowledge
+refreshes** — specific names and quirks turn over yearly, while the patterns underneath
+have been stable for years. Learn the patterns; hold the model names loosely.
+
+### The proportions invert
+
+At runtime, a production system is recognisably what you built: a model, some tools,
+governed data, a loop.
+
+But the effort divides completely differently. In your project, essentially **all** the
+work was the application. In production the application is perhaps 10–20% of it and is
+frequently bought rather than built; the rest is curation, metric definitions, evaluation,
+permissions, and getting people to use it.
+
+**The toy makes the application look like the product. In practice it's the smallest part
+of it** — which is also why the teams hiring for this work are usually data and analytics
+engineering teams rather than people building chatbots. Worth knowing when you read job
+descriptions.
+
+---
+
+## 4.6 What to call it
 
 Vocabulary in this field is used loosely, and using it precisely is a small, real signal.
 
@@ -199,7 +346,7 @@ experience.
 
 ---
 
-## 4.6 Saying it out loud
+## 4.7 Saying it out loud
 
 Practise these until they're yours. Don't memorise them — the wording should be your own,
 and it will sound like it if it isn't.
@@ -266,7 +413,7 @@ who followed a tutorial and someone who thought about what they built.
 
 ---
 
-## 4.7 Questions you'll actually get
+## 4.8 Questions you'll actually get
 
 Short answers, in your own words.
 
@@ -318,6 +465,9 @@ If you want to keep going, roughly in order of value:
   genuinely different shape of problem.
 - **Put it in front of someone else** and watch them use it. You'll learn more in ten
   minutes than from a week of building.
+- **Set up a Genie Space** over the same table and compare it to what you wrote. Ten
+  minutes, no code, and seeing the managed version alongside your own is the fastest way
+  to understand what a platform actually gives you.
 
 ---
 
@@ -328,6 +478,7 @@ If you want to keep going, roughly in order of value:
 > 1. The one-minute version
 > 2. What you built, including three things it doesn't do
 > 3. Why governance is the hard part rather than the model
+> 4. What a team would actually build at work — and why most of the effort isn't code
 >
 > Record yourself once. It's uncomfortable and it's the fastest way to find the sentence
 > you can't quite finish.

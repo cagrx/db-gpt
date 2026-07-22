@@ -88,6 +88,14 @@ policy questions go to the documents.
 
 Try: *How many days of paid time off do I get?* and *What's the meal expense limit?*
 
+Then try one that needs **both** tools at once:
+
+> *If these taxi trips were employee expense claims, how many would need a receipt?*
+
+Nothing in that question contains a number. The assistant has to find the receipt
+threshold in the expense policy, then use it in a `WHERE` clause — the output of one tool
+becoming the input to the next. Every step is printed, so you can watch it happen.
+
 ## Guardrails
 
 `run_sql` only accepts a single `SELECT` (or `WITH … SELECT`). Statements that are stacked

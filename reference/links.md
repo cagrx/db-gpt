@@ -73,3 +73,15 @@ Mentioned in Part 3.7 as context. None are needed to finish the guide.
 | [External models in Model Serving](https://docs.databricks.com/aws/en/machine-learning/foundation-models/external-models-tutorial) | Registering OpenAI as a governed endpoint inside Databricks |
 | [Unity Catalog functions as agent tools](https://docs.databricks.com/aws/en/generative-ai/agent-framework/agent-tool) | Giving a model vetted functions instead of arbitrary SQL |
 | [Model Context Protocol on Databricks](https://docs.databricks.com/aws/en/generative-ai/mcp/) | Managed, external, and custom MCP servers |
+
+## What production actually looks like
+
+Background for Part 3.8 and Part 4.5. Nothing here is needed to finish the guide.
+
+| | |
+|---|---|
+| [Curate an effective Genie Agent](https://docs.databricks.com/aws/en/genie/best-practices) | How a Genie Space is scoped, instructed, and tuned — the managed version of the project |
+| [Tune Genie Space quality](https://docs.databricks.com/aws/en/genie/tune-quality) | Example queries and instructions as the tuning mechanism |
+| [Agent Bricks](https://developers.databricks.com/docs/agents/overview) | Building custom agents on governed lakehouse data |
+| [AI-generated comments in Unity Catalog](https://docs.databricks.com/aws/en/comments/ai-comments) | Generating table and column descriptions, with human review required |
+| [Semantic layer vs. text-to-SQL](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026) | Why raw text-to-SQL struggles on real enterprise schemas |

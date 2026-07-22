@@ -660,8 +660,43 @@ Nobody told it which tool to use. It read both descriptions and chose — SQL fo
 numbers, document search for the policy. **That's what people mean by an "agent":** a
 model that selects and calls tools to accomplish a goal, rather than just producing text.
 
-You've now built something covering both halves of enterprise data. That's the whole
-architecture, at small scale, and the shape doesn't change when the scale does.
+### Now make it use both at once
+
+Choosing between tools is one thing. Needing both for a single answer is another, and
+it's where this stops being a parlour trick.
+
+Your expense policy says receipts are required for anything over a certain amount. Ask:
+
+```
+> If these taxi trips were employee expense claims, how many would need a receipt?
+```
+
+Nothing in that question contains a number. To answer it, the assistant has to:
+
+```
+  Searching documents: expense policy receipt threshold
+  Found in: expenses.md
+
+  SQL: SELECT count(*) AS needs_receipt FROM samples.nyctaxi.trips
+       WHERE fare_amount > 25
+```
+
+**The SQL could not be written until the document had been read.** The `25` isn't in your
+question and isn't in the schema — it came out of `expenses.md` and went into the `WHERE`
+clause. That's not tool *selection*, it's tool *chaining*: the output of one becomes the
+input to the next.
+
+This is what real questions look like. **Policy lives in documents, facts live in tables,
+and the interesting questions cross the boundary.** "How many transactions breach our
+threshold?" is the shape of every compliance question ever asked.
+
+> **Watch for the failure mode.** If it produces a number without searching the documents
+> first, it invented a threshold — a confident, plausible, wrong answer with no visible
+> tell. That's exactly why the assistant prints each step. The system prompt tells it
+> explicitly never to guess a policy value, but you should check rather than trust.
+
+You've now built something covering both halves of enterprise data, and made them meet.
+That's the whole architecture at small scale.
 
 ---
 
@@ -727,9 +762,57 @@ someone who's read about them.
 
 ---
 
-## 3.8 Where the seam is
+## 3.8 What changes at 500 tables
 
-You've now seen both halves working together, so this should land:
+Your assistant knows where to look because **you told it** — two tools, hard-coded, with
+one table's columns pasted into the prompt. That is exactly right at this size, and a
+real company works differently, for reasons worth understanding.
+
+**The reason is scale.** A real lakehouse has thousands of tables. You cannot paste them all
+into a prompt: not for cost, and not for accuracy — a model handed a thousand-table schema
+has a phone book when it needs a guided directory. The measured drop is stark. On
+benchmarks built from *real* enterprise databases averaging hundreds of columns, agent
+frameworks solve roughly **a fifth** of the tasks they manage on small, tidy schemas.
+
+So production does four things differently:
+
+**Scope is curated per domain.** Not one omniscient assistant but several narrow ones — a
+finance one, a supply chain one — each bound to a few dozen carefully chosen tables rather
+than everything.
+
+**The descriptions live with the data, not in the app.** Instead of routing rules written
+into a prompt, the model reads the **comments on tables and columns in Unity Catalog**.
+`promised_at` tells it nothing; *"supplier-committed delivery time, null for walk-ins"*
+tells it everything. The catalog stops being documentation and becomes the map the agent
+navigates by.
+
+**Which tables to use becomes a retrieval problem.** With too many to list, you embed the
+table and column descriptions and retrieve the relevant handful for each question. It's
+the same technique from 3.4 — pointed at the *metadata* instead of the documents.
+
+**Definitions get centralised.** Rather than letting the model invent arithmetic,
+"on-time delivery rate" is defined once, correctly, by someone who knows what it means —
+as a metric view or a governed function — and the model calls it. This is called a
+**semantic layer**, and it changes the failure mode in a way worth remembering:
+
+> With raw text-to-SQL, failure looks like a plausible but incorrect answer. With a
+> semantic layer, failure looks like an **error message.**
+
+Given 4.4's point about silent semantic errors, that trade is the entire argument.
+
+Underneath, the machinery is identical: tool calling, governed data, a loop, a model with
+no privileges of its own. What production adds is knowing which forty tables out of three
+thousand to hand it — and that turns out to be the hard part, which is why Part 4 argues
+the catalog is the moat.
+
+So the useful thing to carry out of this is knowing where the simple version stops. That's
+what lets you talk about the production version credibly.
+
+---
+
+## 3.9 Where the seam is
+
+Step back from the mechanics — at any scale, the division of labour is the same:
 
 **Databricks holds, cleans, and governs the data. The language model does language.**
 
@@ -751,10 +834,12 @@ you've now built the smallest thing that demonstrates it.
 >
 > 1. Answer a numerical question and **show the SQL it ran**
 > 2. Answer a policy question **from the documents, citing which one**
-> 3. **Decline** to answer something the data can't support
+> 3. Answer one that needs **both** — finding a threshold in the policy, then querying
+>    with it
+> 4. **Decline** to answer something the data can't support
 >
-> That third one is not a lesser achievement than the first two. A system that knows what
-> it doesn't know is the difference between a demo and something usable.
+> That last one is not a lesser achievement than the others. A system that knows what it
+> doesn't know is the difference between a demo and something usable.
 >
 > And you should be able to explain, without notes:
 >
@@ -762,6 +847,7 @@ you've now built the smallest thing that demonstrates it.
 > - Why fine-tuning is the wrong tool for "the model doesn't know my data"
 > - What an embedding is, and what a vector database really does
 > - Why the assistant prints its SQL
+> - What would have to change to run this over three thousand tables instead of one
 
 ---
 

@@ -60,6 +60,14 @@ Good for teaching a style or task; a poor way to install facts.
 **GPT** — the family of large language models made by OpenAI. A specific example of an
 LLM.
 
+**Genie** — Databricks' no-code natural-language interface over curated tables. You scope a
+"Genie Space" to a set of Unity Catalog tables, add business-logic instructions and example
+queries, and business users ask questions in plain English. The managed version of what you
+build in Part 3.
+
+**Agent Bricks** — Databricks' platform for building custom agents on governed lakehouse
+data, when a Genie Space isn't enough. Supports external agent frameworks.
+
 **Guardrail** — a check your code runs before acting on what a model asked for. In this
 project: rejecting anything that isn't a single `SELECT`, and capping returned rows.
 
@@ -109,6 +117,12 @@ them in the prompt, have the model answer from them. The name describes the step
 
 **Schema-on-read** — deciding a file's structure when you read it rather than when you
 write it. What data lakes do, and why they can become swamps.
+
+**Semantic layer** — a governed set of business definitions ("revenue", "active
+customer", "on-time delivery rate") defined once and reused, so an agent selects from
+vetted metrics instead of inventing arithmetic over raw tables. Changes failure from a
+plausible wrong answer into an error message. Databricks Metric Views, dbt Semantic Layer,
+and Cube are examples.
 
 **Serverless** — compute where the platform provides machines on demand rather than you
 configuring a cluster. All that Free Edition offers.
