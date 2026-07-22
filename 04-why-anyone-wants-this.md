@@ -1,6 +1,6 @@
 # Part 4 — Why anyone wants this
 
-*About 2 hours. The shortest part, and the one that matters most.*
+*The shortest part, and the one that matters most.*
 
 You can now explain what Databricks is, and you've built something that answers questions
 about real data in plain English.

@@ -1,6 +1,6 @@
 # Part 2 — Hands on
 
-*About 5–7 hours. Everything here runs on the free tier.*
+*Everything here runs on the free tier.*
 
 Part 1 was the shape of the problem. This part is where you actually touch the platform.
 

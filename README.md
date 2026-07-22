@@ -32,13 +32,10 @@ how the idea stops being abstract.
 
 | | | |
 |---|---|---|
-| **1** | [What Databricks is and how it works](01-what-is-databricks.md) | Reading · ~3–4h |
-| **2** | [Hands on](02-hands-on.md) | Databricks Free Edition · ~5–7h |
-| **3** | [How the LLM plugs in](03-how-the-llm-plugs-in.md) | Build the assistant · ~6–8h |
-| **4** | [Why anyone wants this](04-why-anyone-wants-this.md) | The part that matters · ~2h |
-
-Roughly 16–21 hours total. That's an estimate, not a target — finishing sooner is
-better, not worse.
+| **1** | [What Databricks is and how it works](01-what-is-databricks.md) | Reading |
+| **2** | [Hands on](02-hands-on.md) | Databricks Free Edition |
+| **3** | [How the LLM plugs in](03-how-the-llm-plugs-in.md) | Build the assistant |
+| **4** | [Why anyone wants this](04-why-anyone-wants-this.md) | The part that matters |
 
 Read them in order. Each part sets up the next, and the thing you build in Part 3 uses
 the data you loaded in Part 2.

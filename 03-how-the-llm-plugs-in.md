@@ -1,6 +1,6 @@
 # Part 3 — How the LLM plugs in
 
-*About 6–8 hours. Concepts first, then you build something.*
+*Concepts first, then you build something.*
 
 In Part 2 you queried a table of taxi trips by hand. By the end of this part, you'll have
 built something that writes those queries for you — you ask in English, it answers.

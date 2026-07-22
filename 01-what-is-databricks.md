@@ -1,6 +1,6 @@
 # Part 1 — What Databricks is and how it works
 
-*Reading, no hands-on yet. About 3–4 hours.*
+*Reading, no hands-on yet.*
 
 Everything here is anchored to the one thing you almost certainly know already: a single
 relational database like MySQL or PostgreSQL, holding tables for one application. Every
