@@ -100,3 +100,12 @@ credibly, and having something real to point at when you do.
 - [Links](reference/links.md) — every external resource, verified
 - [Free Edition limits](reference/free-edition-limits.md) — what you can't do, and why
   something might be greyed out
+
+---
+
+## Ready?
+
+**Start with [Part 1 — What Databricks is and how it works](01-what-is-databricks.md).**
+
+It's reading only, no setup required — so you can begin right now and worry about accounts
+when you reach Part 2.
